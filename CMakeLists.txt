@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16.0 FATAL_ERROR) # Configurable policies: <= CMP0097
+cmake_minimum_required(VERSION 3.20.0 FATAL_ERROR) # Configurable policies: <= CMP0097
 
 cmake_policy(SET CMP0091 NEW)
 cmake_policy(SET CMP0092 NEW)
@@ -501,6 +501,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
 		-Wno-return-std-move-in-c++11
 		-Wno-unsafe-buffer-usage
 		-Wno-unknown-warning-option
+		-Wno-switch-default
 	)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES GNU)
 	add_compile_options(
@@ -656,7 +657,7 @@ if (APPLE)
 endif()
 
 # check if we need to link with libatomic (not needed on MSVC)
-if (NOT Windows)
+if (NOT MSVC)
 	# TODO: migrate to CheckSourceCompiles in CMake >= 3.19
 	include(CheckCXXSourceCompiles)
 
@@ -742,7 +743,8 @@ if(NOT gnutls)
 				TORRENT_USE_OPENSSL
 				TORRENT_USE_LIBCRYPTO
 				TORRENT_SSL_PEERS
-				OPENSSL_NO_SSL2)
+				OPENSSL_NO_SSL2
+				OPENSSL_NO_SSL3)
 	endif()
 endif()
 

@@ -4,7 +4,7 @@ Copyright (c) 2005, 2007-2010, 2012-2022, Arvid Norberg
 Copyright (c) 2016, 2018, Alden Torres
 Copyright (c) 2016, Andrei Kurushin
 Copyright (c) 2016-2018, Steven Siloti
-Copyright (c) 2016, Vladimir Golovnev
+Copyright (c) 2016, 2025, Vladimir Golovnev (glassez)
 Copyright (c) 2018, d-komarov
 All rights reserved.
 
@@ -539,6 +539,7 @@ void test_rename(std::string const& test_path)
 	TEST_EQUAL(s->files().file_path(0_file), "new_filename");
 }
 
+#if TORRENT_HAVE_MMAP || TORRENT_HAVE_MAP_VIEW_OF_FILE
 namespace {
 std::int64_t file_size_on_disk(std::string const& path)
 {
@@ -668,6 +669,7 @@ void test_pre_allocate()
 		}
 	}
 }
+#endif // TORRENT_HAVE_MMAP || TORRENT_HAVE_MAP_VIEW_OF_FILE
 
 using lt::operator""_bit;
 using check_files_flag_t = lt::flags::bitfield_flag<std::uint64_t, struct check_files_flag_type_tag>;
@@ -870,7 +872,8 @@ TORRENT_TEST(check_files_allocate_posix)
 	test_check_files(zero_prio, lt::posix_disk_io_constructor);
 }
 
-// posix_storage doesn't support pre-allocating files on non-windows
+// posix_storage is meant to only use the most portable API for disk I/O, and so
+// doesn't support pre-allocating files
 /*
 TORRENT_TEST(test_pre_allocate_posix)
 {
@@ -928,11 +931,12 @@ void test_fastresume(bool const test_deprecated)
 		p.storage_mode = storage_mode_sparse;
 		error_code ignore;
 		torrent_handle h = ses.add_torrent(std::move(p), ignore);
-		TEST_CHECK(exists(combine_path(p.save_path, "temporary")));
-		if (!exists(combine_path(p.save_path, "temporary")))
+
+		torrent_status s = h.status();
+		TEST_CHECK(exists(combine_path(s.save_path, "temporary")));
+		if (!exists(combine_path(s.save_path, "temporary")))
 			return;
 
-		torrent_status s;
 		for (int i = 0; i < 50; ++i)
 		{
 			print_alerts(ses, "ses");
