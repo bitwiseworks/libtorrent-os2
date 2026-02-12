@@ -410,6 +410,12 @@ std::pair<int, int> terminal_size()
 	{
 		width = coninfo.dwSize.X;
 		height = coninfo.srWindow.Bottom - coninfo.srWindow.Top;
+#elif defined(__OS2__)
+        {
+                int dst[2];
+                _scrsize(dst);
+                width = dst[0];
+                height = dst[1];
 #else
 	int tty = open("/dev/tty", O_RDONLY);
 	if (tty < 0)
@@ -432,11 +438,13 @@ std::pair<int, int> terminal_size()
 		if (height < 25)
 			height = 25;
 	}
+#if !defined(__OS2__)
 	else
 	{
 		width = 190;
 		height = 100;
 	}
+#endif
 	return {width, height};
 }
 
