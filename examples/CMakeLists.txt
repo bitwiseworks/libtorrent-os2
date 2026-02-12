@@ -17,6 +17,12 @@ endif()
 foreach(example ${single_file_examples})
     add_executable(${example} "${example}.cpp")
     target_link_libraries(${example} PRIVATE torrent-rasterbar)
+    if (OS2)
+        set_target_properties(${example} PROPERTIES
+            OS2_DEF_VENDOR "$ENV{VENDOR}"
+            OS2_DEF_PATCH "${VER_TINY}"
+            OS2_DEF_VERSION "${PROJECT_VERSION}")
+    endif()
 endforeach(example)
 
 add_executable(client_test
@@ -25,3 +31,9 @@ add_executable(client_test
     torrent_view.cpp
     session_view.cpp)
 target_link_libraries(client_test PRIVATE torrent-rasterbar)
+if (OS2)
+    set_target_properties(client_test PROPERTIES
+        OS2_DEF_VENDOR "$ENV{VENDOR}"
+        OS2_DEF_PATCH "${VER_TINY}"
+        OS2_DEF_VERSION "${PROJECT_VERSION}")
+endif()

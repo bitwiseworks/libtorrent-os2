@@ -45,6 +45,12 @@ foreach(TARGET_SRC ${tests})
 	add_executable(${TARGET} ${TARGET_SRC})
 	target_link_libraries(${TARGET} test_common)
 	add_test(${TARGET} ${TARGET})
+	if (OS2)
+		set_target_properties(${TARGET} PROPERTIES
+			OS2_DEF_VENDOR "$ENV{VENDOR}"
+			OS2_DEF_PATCH "${VER_TINY}"
+			OS2_DEF_VERSION "${PROJECT_VERSION}")
+	endif()
 endforeach()
 
 file(GLOB GZIP_ASSETS "${CMAKE_CURRENT_SOURCE_DIR}/*.gz")

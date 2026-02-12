@@ -582,6 +582,12 @@ set_target_properties(torrent-rasterbar
 		VERSION ${PROJECT_VERSION}
 		SOVERSION ${SOVERSION}
 )
+if (BUILD_SHARED_LIBS AND OS2)
+	set_target_properties(torrent-rasterbar PROPERTIES
+		OS2_DEF_VENDOR "$ENV{VENDOR}"
+		OS2_DEF_PATCH "${VER_TINY}"
+		OS2_DEF_VERSION "${PROJECT_VERSION}")
+endif()
 
 target_include_directories(torrent-rasterbar PUBLIC
 	$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
