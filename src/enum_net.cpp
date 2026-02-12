@@ -151,6 +151,36 @@ const unsigned long siocgifmtu = SIOCGIFMTU;
 
 #include "libtorrent/aux_/disable_warnings_pop.hpp"
 
+#if defined(TORRENT_OS2)
+// the below part is copied from <boost/asio/detail/old_win_sdk_compat.hpp>
+struct in6_addr_emulation
+{
+  union
+  {
+    u_char Byte[16];
+    u_short Word[8];
+  } u;
+};
+
+#if !defined(s6_addr)
+# define _S6_un u
+# define _S6_u8 Byte
+# define s6_addr _S6_un._S6_u8
+#endif // !defined(s6_addr)
+
+struct sockaddr_in6_emulation
+{
+  short sin6_family;
+  u_short sin6_port;
+  u_long sin6_flowinfo;
+  in6_addr_emulation sin6_addr;
+  u_long sin6_scope_id;
+};
+
+typedef in6_addr_emulation in6_addr;
+typedef sockaddr_in6_emulation sockaddr_in6;
+#endif
+
 #if defined(TORRENT_OS2) && !defined(IF_NAMESIZE)
 #define IF_NAMESIZE IFNAMSIZ
 #endif
