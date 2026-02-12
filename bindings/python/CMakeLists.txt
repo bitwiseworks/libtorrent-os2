@@ -37,6 +37,11 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC" AND NOT skip-python-runtime-test)
 	endif()
 endif()
 
+if (OS2)
+# no soabi prefix for us
+	set(Python3_SOABI "")
+endif()
+
 set(boost-python-module-name "python${Python3_VERSION_MAJOR}${Python3_VERSION_MINOR}" CACHE STRING "Boost::python module name, e.g. 'python-3.7'")
 
 find_package(Boost REQUIRED COMPONENTS ${boost-python-module-name})
@@ -71,6 +76,16 @@ set_target_properties(python-libtorrent
 	PROPERTIES
 		OUTPUT_NAME libtorrent
 )
+
+if (OS2)
+	set_target_properties(python-libtorrent
+		PROPERTIES
+			TARGET_SHORT torrent
+	)
+	add_custom_command(TARGET python-libtorrent
+		COMMAND ${CMAKE_COMMAND} -E create_symlink torrent.dll libtorrent.dll
+	)
+endif()
 
 if (MSVC)
 	target_compile_options(python-libtorrent PRIVATE /bigobj)
