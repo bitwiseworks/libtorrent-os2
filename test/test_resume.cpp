@@ -58,7 +58,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "setup_transfer.hpp"
 #include "settings.hpp"
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 #define SEP "\\"
 #else
 #define SEP "/"
@@ -126,7 +126,7 @@ std::vector<char> generate_resume_data(torrent_info* ti
 	entry::list_type& httpseeds = rd["httpseeds"].list();
 	httpseeds.push_back(entry("http://resume_data_http_seed.com"));
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	rd["save_path"] = "c:\\resume_data save_path";
 #else
 	rd["save_path"] = "/resume_data save_path";
@@ -179,7 +179,7 @@ torrent_handle test_resume_flags(lt::session& ses
 	}
 	else
 	{
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 		p.save_path = "c:\\add_torrent_params save_path";
 #else
 		p.save_path = "/add_torrent_params save_path";
@@ -779,7 +779,7 @@ TORRENT_TEST(plain_deprecated)
 	auto const now = lt::clock_type::now();
 	torrent_status s = test_resume_flags(ses, {}, "", "", true).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -796,7 +796,7 @@ TORRENT_TEST(use_resume_save_path_deprecated)
 	torrent_status s = test_resume_flags(ses
 		, torrent_flags::use_resume_save_path, "", "", true).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\resume_data save_path");
 #else
 	TEST_EQUAL(s.save_path, "/resume_data save_path");
@@ -815,7 +815,7 @@ TORRENT_TEST(override_resume_data_deprecated)
 		| torrent_flags::paused, "", "", true).status();
 
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -844,7 +844,7 @@ TORRENT_TEST(upload_mode_deprecated)
 	torrent_status s = test_resume_flags(ses
 		, torrent_flags::upload_mode, "", "", true).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -863,7 +863,7 @@ TORRENT_TEST(share_mode_deprecated)
 		, torrent_flags::override_resume_data
 		| torrent_flags::share_mode, "", "", true).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -882,7 +882,7 @@ TORRENT_TEST(auto_managed_deprecated)
 	torrent_status s = test_resume_flags(ses
 		, torrent_flags::auto_managed, "", "", true).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -899,7 +899,7 @@ TORRENT_TEST(paused_deprecated)
 	auto const now = lt::clock_type::now();
 	torrent_status s = test_resume_flags(ses, torrent_flags::paused, "", "", true).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -1575,7 +1575,7 @@ TORRENT_TEST(plain)
 	auto const now = lt::clock_type::now();
 	torrent_status s = test_resume_flags(ses).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -1616,7 +1616,7 @@ TORRENT_TEST(upload_mode)
 	auto const now = lt::clock_type::now();
 	torrent_status s = test_resume_flags(ses, torrent_flags::upload_mode).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -1634,7 +1634,7 @@ TORRENT_TEST(share_mode)
 	torrent_status s = test_resume_flags(ses
 		, torrent_flags::share_mode).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -1652,7 +1652,7 @@ TORRENT_TEST(auto_managed)
 	auto const now = lt::clock_type::now();
 	torrent_status s = test_resume_flags(ses, torrent_flags::auto_managed).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");
@@ -1671,7 +1671,7 @@ TORRENT_TEST(paused)
 	auto const now = lt::clock_type::now();
 	torrent_status s = test_resume_flags(ses, torrent_flags::paused).status();
 	default_tests(s, now);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(s.save_path, "c:\\add_torrent_params save_path");
 #else
 	TEST_EQUAL(s.save_path, "/add_torrent_params save_path");

@@ -154,7 +154,7 @@ TORRENT_TEST(paths)
 	TEST_EQUAL(combine_path("test1/", "test2"), "test1/test2");
 	TEST_EQUAL(combine_path("test1", "."), "test1");
 	TEST_EQUAL(combine_path(".", "test1"), "test1");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(combine_path("test1\\", "test2"), "test1\\test2");
 	TEST_EQUAL(combine_path("test1", "test2"), "test1\\test2");
 #else
@@ -172,7 +172,7 @@ TORRENT_TEST(paths)
 	TEST_EQUAL(remove_extension("blah.foo.bar"), "blah.foo");
 	TEST_EQUAL(remove_extension("blah.foo."), "blah.foo");
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(is_root_path("c:\\blah"), false);
 	TEST_EQUAL(is_root_path("c:\\"), true);
 	TEST_EQUAL(is_root_path("\\\\"), true);
@@ -186,7 +186,7 @@ TORRENT_TEST(paths)
 	TEST_EQUAL(is_root_path("/"), true);
 #endif
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_CHECK(path_equal("c:\\blah\\", "c:\\blah"));
 	TEST_CHECK(path_equal("c:\\blah", "c:\\blah"));
 	TEST_CHECK(path_equal("c:\\blah/", "c:\\blah"));
@@ -224,7 +224,7 @@ TORRENT_TEST(paths)
 	TEST_EQUAL(has_parent_path("/"), false);
 	TEST_EQUAL(parent_path(""), "");
 	TEST_EQUAL(has_parent_path(""), false);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(parent_path("\\\\"), "");
 	TEST_EQUAL(has_parent_path("\\\\"), false);
 	TEST_EQUAL(parent_path("c:\\"), "");
@@ -237,7 +237,7 @@ TORRENT_TEST(paths)
 	TEST_EQUAL(has_parent_path("\\\\foo/bar\\"), true);
 #endif
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(is_complete("c:\\"), true);
 	TEST_EQUAL(is_complete("c:\\foo\\bar"), true);
 	TEST_EQUAL(is_complete("\\\\foo\\bar"), true);
@@ -252,7 +252,7 @@ TORRENT_TEST(paths)
 
 	TEST_EQUAL(complete("."), current_working_directory());
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(complete(".\\foobar"), current_working_directory() + "\\foobar");
 #else
 	TEST_EQUAL(complete("./foobar"), current_working_directory() + "/foobar");
@@ -286,7 +286,7 @@ TORRENT_TEST(path_compare)
 
 TORRENT_TEST(filename)
 {
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(filename("blah"), "blah");
 	TEST_EQUAL(filename("\\blah\\foo\\bar"), "bar");
 	TEST_EQUAL(filename("\\blah\\foo\\bar\\"), "bar");
@@ -302,7 +302,7 @@ TORRENT_TEST(split_path)
 {
 	using r = std::pair<string_view, string_view>;
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_CHECK(lsplit_path("\\b\\c\\d") == r("b", "c\\d"));
 	TEST_CHECK(lsplit_path("a\\b\\c\\d") == r("a", "b\\c\\d"));
 	TEST_CHECK(lsplit_path("a") == r("a", ""));
@@ -336,7 +336,7 @@ TORRENT_TEST(split_path_pos)
 {
 	using r = std::pair<string_view, string_view>;
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_CHECK(lsplit_path("\\b\\c\\d", 0) == r("b", "c\\d"));
 	TEST_CHECK(lsplit_path("\\b\\c\\d", 1) == r("b", "c\\d"));
 	TEST_CHECK(lsplit_path("\\b\\c\\d", 2) == r("b", "c\\d"));
@@ -410,7 +410,7 @@ TORRENT_TEST(stat_file)
 
 TORRENT_TEST(relative_path)
 {
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 #define S "\\"
 #else
 #define S "/"
@@ -607,6 +607,7 @@ TORRENT_TEST(unc_paths)
 
 #endif
 
+#if TORRENT_HAVE_MMAP || TORRENT_HAVE_MAP_VIEW_OF_FILE
 TORRENT_TEST(to_file_open_mode)
 {
 	TEST_CHECK(aux::to_file_open_mode(aux::open_mode::write, false) == file_open_mode::read_write);
@@ -615,4 +616,4 @@ TORRENT_TEST(to_file_open_mode)
 	TEST_CHECK(aux::to_file_open_mode(aux::open_mode::write | aux::open_mode::no_atime, false) == (file_open_mode::read_write | file_open_mode::no_atime));
 	TEST_CHECK(aux::to_file_open_mode(aux::open_mode::write, true) == (file_open_mode::read_write | file_open_mode::mmapped));
 }
-
+#endif

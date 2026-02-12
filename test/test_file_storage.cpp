@@ -131,7 +131,7 @@ TORRENT_TEST(rename_file)
 
 	// files with absolute paths should ignore the save_path argument
 	// passed in to file_path()
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	st.rename_file(file_index_t{0}, "c:\\tmp\\a");
 	TEST_EQUAL(st.file_path(file_index_t{0}, "."), "c:\\tmp\\a");
 #else
@@ -168,7 +168,7 @@ TORRENT_TEST(rename_file2)
 	TEST_EQUAL(st.file_path(file_index_t{0}, "."), combine_path(".", combine_path("test", combine_path("c", "d"))));
 	TEST_EQUAL(st.file_path(file_index_t{0}, ""), combine_path("test", combine_path("c", "d")));
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	st.rename_file(file_index_t{0}, "c:\\tmp\\a");
 	TEST_EQUAL(st.file_path(file_index_t{0}, "."), "c:\\tmp\\a");
 	TEST_EQUAL(st.file_path(file_index_t{0}, "c:\\test-1\\test2"), "c:\\tmp\\a");
@@ -226,7 +226,7 @@ TORRENT_TEST(invalid_path2)
 {
 	file_storage st;
 	st.set_piece_length(16 * 1024);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	st.add_file_borrow({}, R"(+\\\+\\()", 10);
 #else
 	st.add_file_borrow({}, "+///+//(", 10);
@@ -482,7 +482,7 @@ TORRENT_TEST(map_block_mid)
 	}
 }
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 #define SEP "\\"
 #else
 #define SEP "/"

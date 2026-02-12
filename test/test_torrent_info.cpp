@@ -105,7 +105,7 @@ struct test_torrent_t
 
 using namespace lt;
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 #define SEPARATOR "\\"
 #else
 #define SEPARATOR "/"
@@ -227,7 +227,7 @@ static test_torrent_t const test_torrents[] =
 	},
 	{ "invalid_name3.torrent", [](torrent_info const* ti) {
 			// windows does not allow trailing spaces in filenames
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 			TEST_EQUAL(ti->name(), "foobar");
 #else
 			TEST_EQUAL(ti->name(), "foobar ");
@@ -627,7 +627,7 @@ TORRENT_TEST(sanitize_path_trailing_dots)
 	sanitize_append_path_element(path, "a");
 	sanitize_append_path_element(path, "abc...");
 	sanitize_append_path_element(path, "c");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "a" SEPARATOR "abc" SEPARATOR "c");
 #else
 	TEST_EQUAL(path, "a" SEPARATOR "abc..." SEPARATOR "c");
@@ -635,7 +635,7 @@ TORRENT_TEST(sanitize_path_trailing_dots)
 
 	path.clear();
 	sanitize_append_path_element(path, "abc...");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "abc");
 #else
 	TEST_EQUAL(path, "abc...");
@@ -643,7 +643,7 @@ TORRENT_TEST(sanitize_path_trailing_dots)
 
 	path.clear();
 	sanitize_append_path_element(path, "abc.");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "abc");
 #else
 	TEST_EQUAL(path, "abc.");
@@ -652,7 +652,7 @@ TORRENT_TEST(sanitize_path_trailing_dots)
 
 	path.clear();
 	sanitize_append_path_element(path, "a. . .");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "a");
 #else
 	TEST_EQUAL(path, "a. . .");
@@ -666,7 +666,7 @@ TORRENT_TEST(sanitize_path_trailing_spaces)
 	sanitize_append_path_element(path, "a");
 	sanitize_append_path_element(path, "abc   ");
 	sanitize_append_path_element(path, "c");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "a" SEPARATOR "abc" SEPARATOR "c");
 #else
 	TEST_EQUAL(path, "a" SEPARATOR "abc   " SEPARATOR "c");
@@ -674,7 +674,7 @@ TORRENT_TEST(sanitize_path_trailing_spaces)
 
 	path.clear();
 	sanitize_append_path_element(path, "abc   ");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "abc");
 #else
 	TEST_EQUAL(path, "abc   ");
@@ -682,7 +682,7 @@ TORRENT_TEST(sanitize_path_trailing_spaces)
 
 	path.clear();
 	sanitize_append_path_element(path, "abc ");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "abc");
 #else
 	TEST_EQUAL(path, "abc ");
@@ -725,7 +725,7 @@ TORRENT_TEST(sanitize_path)
 
 	path.clear();
 	sanitize_append_path_element(path, "dev:");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "dev_");
 #else
 	TEST_EQUAL(path, "dev:");
@@ -734,7 +734,7 @@ TORRENT_TEST(sanitize_path)
 	path.clear();
 	sanitize_append_path_element(path, "c:");
 	sanitize_append_path_element(path, "b");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "c_" SEPARATOR "b");
 #else
 	TEST_EQUAL(path, "c:" SEPARATOR "b");
@@ -744,7 +744,7 @@ TORRENT_TEST(sanitize_path)
 	sanitize_append_path_element(path, "c:");
 	sanitize_append_path_element(path, ".");
 	sanitize_append_path_element(path, "c");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "c_" SEPARATOR "c");
 #else
 	TEST_EQUAL(path, "c:" SEPARATOR "c");
@@ -778,7 +778,7 @@ TORRENT_TEST(sanitize_path)
 	path.clear();
 	sanitize_append_path_element(path, "abc");
 	sanitize_append_path_element(path, "   ");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "abc");
 #else
 	TEST_EQUAL(path, "abc" SEPARATOR "   ");
@@ -791,7 +791,7 @@ TORRENT_TEST(sanitize_path)
 
 	path.clear();
 	sanitize_append_path_element(path, "\b?filename=4");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "__filename=4");
 #else
 	TEST_EQUAL(path, "_?filename=4");
@@ -913,7 +913,7 @@ TORRENT_TEST(sanitize_path_force)
 
 	path.clear();
 	sanitize_append_path_element(path, "dev:", true);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "dev_");
 #else
 	TEST_EQUAL(path, "dev:");
@@ -922,7 +922,7 @@ TORRENT_TEST(sanitize_path_force)
 	path.clear();
 	sanitize_append_path_element(path, "c:", true);
 	sanitize_append_path_element(path, "b", true);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "c_" SEPARATOR "b");
 #else
 	TEST_EQUAL(path, "c:" SEPARATOR "b");
@@ -932,7 +932,7 @@ TORRENT_TEST(sanitize_path_force)
 	sanitize_append_path_element(path, "c:", true);
 	sanitize_append_path_element(path, ".", true);
 	sanitize_append_path_element(path, "c", true);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "c_" SEPARATOR "_" SEPARATOR "c");
 #else
 	TEST_EQUAL(path, "c:" SEPARATOR "_" SEPARATOR "c");
@@ -966,7 +966,7 @@ TORRENT_TEST(sanitize_path_force)
 	path.clear();
 	sanitize_append_path_element(path, "abc", true);
 	sanitize_append_path_element(path, "   ", true);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "abc" SEPARATOR "_");
 #else
 	TEST_EQUAL(path, "abc" SEPARATOR "   ");
@@ -979,7 +979,7 @@ TORRENT_TEST(sanitize_path_force)
 
 	path.clear();
 	sanitize_append_path_element(path, "\b?filename=4", true);
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "__filename=4");
 #else
 	TEST_EQUAL(path, "_?filename=4");
@@ -1082,7 +1082,7 @@ TORRENT_TEST(sanitize_path_colon)
 	using lt::aux::sanitize_append_path_element;
 	std::string path;
 	sanitize_append_path_element(path, "foo:bar");
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(path, "foo_bar");
 #else
 	TEST_EQUAL(path, "foo:bar");
@@ -1210,7 +1210,7 @@ TORRENT_TEST(parse_torrents)
 	std::cout << ti1.name() << std::endl;
 	TEST_CHECK(ti1.name() == "test1");
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	info["name.utf-8"] = "c:/test1/test2/test3";
 #else
 	info["name.utf-8"] = "/test1/test2/test3";
@@ -1220,7 +1220,7 @@ TORRENT_TEST(parse_torrents)
 	bencode(std::back_inserter(buf), torrent);
 	torrent_info ti2(buf, from_span);
 	std::cout << ti2.name() << std::endl;
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	TEST_EQUAL(ti2.name(), "c_test1test2test3");
 #else
 	TEST_EQUAL(ti2.name(), "test1test2test3");

@@ -349,6 +349,7 @@ TORRENT_TEST(create_torrent_symlink)
 	{
 		auto const filename = ti.files().file_path(i);
 
+#ifndef TORRENT_OS2
 		if (filename == "test-torrent/d/test-link-1"
 			|| filename == "test-torrent/test-link-2"
 			|| filename == "test-torrent/a/b/c/test-link-3")
@@ -362,12 +363,27 @@ TORRENT_TEST(create_torrent_symlink)
 			++found;
 		}
 	}
+#else
+		if (filename == "test-torrent\\d\\test-link-1"
+			|| filename == "test-torrent\\test-link-2"
+			|| filename == "test-torrent\\a\\b\\c\\test-link-3")
+		{
+			TEST_EQUAL(ti.files().symlink(i), "test-torrent\\a\\b\\c\\file-1");
+			++found;
+		}
+		else if (filename == "test-torrent\\a\\b\\c\\test-link-4")
+		{
+			TEST_EQUAL(ti.files().symlink(i), "test-torrent\\d\\file-2");
+			++found;
+		}
+	}
+#endif
 	TEST_EQUAL(found, 4);
 }
 
 #endif
 
-#ifndef TORRENT_WINDOWS
+#if !defined(TORRENT_WINDOWS) and !defined(TORRENT_OS2)
 
 TORRENT_TEST(v2_attributes)
 {
