@@ -77,16 +77,6 @@ set_target_properties(python-libtorrent
 		OUTPUT_NAME libtorrent
 )
 
-if (OS2)
-	set_target_properties(python-libtorrent
-		PROPERTIES
-			TARGET_SHORT torrent
-	)
-	add_custom_command(TARGET python-libtorrent
-		COMMAND ${CMAKE_COMMAND} -E create_symlink torrent.dll libtorrent.dll
-	)
-endif()
-
 if (MSVC)
 	target_compile_options(python-libtorrent PRIVATE /bigobj)
 endif()
@@ -116,6 +106,17 @@ print(distutils.sysconfig.get_python_lib(prefix='', plat_specific=True))
 		OUTPUT_VARIABLE _PYTHON3_SITE_ARCH
 		OUTPUT_STRIP_TRAILING_WHITESPACE
 	)
+endif()
+
+if (OS2)
+	set_target_properties(python-libtorrent
+		PROPERTIES
+			TARGET_SHORT torrent
+	)
+	add_custom_command(TARGET python-libtorrent
+		COMMAND ${CMAKE_COMMAND} -E create_symlink torrent.dll libtorrent.dll
+	)
+	install(FILES "${CMAKE_CURRENT_BINARY_DIR}/libtorrent.dll" DESTINATION "${_PYTHON3_SITE_ARCH}")
 endif()
 
 message(STATUS "Python 3 site packages: ${_PYTHON3_SITE_ARCH}")
