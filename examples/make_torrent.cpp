@@ -231,7 +231,7 @@ int main(int argc_, char const* argv_[]) try
 	}
 
 	lt::file_storage fs;
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	if (full_path[1] != ':')
 #else
 	if (full_path[0] != '/')
