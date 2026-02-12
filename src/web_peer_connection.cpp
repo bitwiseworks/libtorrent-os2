@@ -134,7 +134,7 @@ web_peer_connection::web_peer_connection(peer_connection_args& pack
 std::string escape_file_path(file_storage const& storage, file_index_t index)
 {
 	std::string new_path { storage.file_path(index) };
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 	convert_path_to_posix(new_path);
 #endif
 	return escape_path(new_path);

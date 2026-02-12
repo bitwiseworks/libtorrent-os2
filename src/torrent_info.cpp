@@ -90,7 +90,7 @@ namespace libtorrent {
 	// backslash are filtered unconditionally and separately from this function.
 	bool valid_path_character(std::int32_t const c)
 	{
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 		// On windows, both the filesystem and the operating system impose
 		// restrictions.
 		static const char invalid_chars[] = "?<>\"|\b*:";
@@ -176,7 +176,7 @@ namespace aux {
 	{
 		if (element.size() == 1 && element[0] == '.' && !force_element) return;
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 #define TORRENT_SEPARATOR '\\'
 #else
 #define TORRENT_SEPARATOR '/'
@@ -315,7 +315,7 @@ namespace aux {
 			return;
 		}
 
-#ifdef TORRENT_WINDOWS
+#if defined(TORRENT_WINDOWS) || defined(TORRENT_OS2)
 		// remove trailing spaces and dots. These aren't allowed in filenames on windows
 		for (int i = int(path.size()) - 1; i >= 0; --i)
 		{
